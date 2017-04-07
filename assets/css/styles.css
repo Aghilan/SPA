@@ -1,0 +1,33 @@
+div.grid-left {
+  width: 33%;
+  min-height: 250px;
+  float: left;
+  block-size: inherit;
+}
+div.grid-center {
+  width: 33%;
+  min-height: 250px;
+  float: left;
+  block-size: inherit;
+}
+
+div.grid-right {
+  width: 33%;
+  min-height: 250px;
+  float: left;
+  block-size: inherit;
+}
+
+div.grid-content {
+  margin: 5%;
+}
+
+div.grid-image {
+  text-align: center;
+}
+
+img {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
