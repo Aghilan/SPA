@@ -1,32 +1,33 @@
+var lastRenderedGrid = 0;
+var filteredObject;
+
 $(document).ready(function(){
-  var bigObject
-
-  renderCardSet()
-
-  var win = $(window);
-  win.scroll(function() {
-		var scrollHeight = $(document).height() - win.height()
-    if ( scrollHeight > win.scrollTop() - 10 && scrollHeight < win.scrollTop() + 10) {
-			renderCardSet();
-    }
-	});
+    $.getJSON( "https://test-prod-api.herokuapp.com/products", function( data ) {
+      filteredObject = data.products;
+      renderCardSet(lastRenderedGrid)
+      var win = $(window);
+      win.scroll(function() {
+  		  var scrollHeight = $(document).height() - win.height()
+        if ( scrollHeight > win.scrollTop() - 10 && scrollHeight < win.scrollTop() + 10) {
+    			lastRenderedGrid+= 9
+          renderCardSet(lastRenderedGrid)
+        }
+  	   });
+    });
 });
 
-function renderCardSet() {
-  $(".grid-row").html(renderContentRow())
-  var temp = $(".grid-set").html()
-  $(".grid-set").append(temp)
-  $(".grid-set").append(temp)
+function renderCardSet(setIndex) {
+  $('.grid-collection').append($("<div>", {class: "grid-set"}).html(renderContentRow(setIndex).add(renderContentRow(setIndex+3)).add(renderContentRow(setIndex+6))))
 }
 
-function renderContentRow() {
-  $(".grid-card").html(renderContentGrid())
-  var temp = $(".grid-row").html()
-  $(".grid-row").append(temp)
-  $(".grid-row").append(temp)
+function renderContentRow( rowIndex ) {
+  var $left = $("<div>", {class: "grid-card"}).html(renderContentGrid(rowIndex));
+  var $center = $("<div>", {class: "grid-card"}).html(renderContentGrid(rowIndex+1));
+  var $right = $("<div>", {class: "grid-card"}).html(renderContentGrid(rowIndex+2));
+  return $("<div>", {class: "grid-row"}).html($left.add($center).add($right))
 }
 
-function renderContentGrid() {
-  var temp =  $('#temp').html()
-  return temp
+function renderContentGrid(index) {
+  $('#temp img').attr('src', filteredObject[index].img)
+  return $("#temp").html()
 }
