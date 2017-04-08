@@ -1,9 +1,16 @@
-var lastRenderedGrid = 0;
-var filteredObject, allObjects;
-
+var lastRenderedGrid = 0
+var filteredObject, allObjects
+var categories = []
 $(document).ready(function(){
     $.getJSON( "https://test-prod-api.herokuapp.com/products", function( data ) {
       allObjects = data.products;
+
+      allObjects.map(function(product) {
+          if ( categories.indexOf(product.cat) == -1 ) {
+            categories.push(product.cat)
+          }
+      })
+
       filteredObject = allObjects;
       if(true) {
 
@@ -17,7 +24,10 @@ $(document).ready(function(){
             return parseFloat(a.price) - parseFloat(b.price);
         });
       }
+
       renderCardSet(lastRenderedGrid)
+
+
       var win = $(window);
       win.scroll(function() {
   		  var scrollHeight = $(document).height() - win.height()
