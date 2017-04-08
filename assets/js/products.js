@@ -1,9 +1,22 @@
 var lastRenderedGrid = 0;
-var filteredObject;
+var filteredObject, allObjects;
 
 $(document).ready(function(){
     $.getJSON( "https://test-prod-api.herokuapp.com/products", function( data ) {
-      filteredObject = data.products;
+      allObjects = data.products;
+      filteredObject = allObjects;
+      if(true) {
+
+        //Sample Filtering based on Category
+        filteredObject = $(allObjects).filter(function( idx ) {
+                            return allObjects[idx].cat === "jeans";
+                          });
+
+        //Sample Sorting based on Price
+        filteredObject = filteredObject.sort(function(a, b) {
+            return parseFloat(a.price) - parseFloat(b.price);
+        });
+      }
       renderCardSet(lastRenderedGrid)
       var win = $(window);
       win.scroll(function() {
