@@ -3,13 +3,14 @@ html, body {
 }
 
 div.grid-card {
-  width: 33%;
+  width: 33.33%;
   min-height: 250px;
   float: left;
   block-size: inherit;
 }
 
 div.grid-row {
+  width: 100%;
   display: inline-block;
 }
 div.grid-set {

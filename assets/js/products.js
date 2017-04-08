@@ -29,5 +29,9 @@ function renderContentRow( rowIndex ) {
 
 function renderContentGrid(index) {
   $('#temp img').attr('src', filteredObject[index].img)
+  $('#temp h2').html(filteredObject[index].name)
+  $('#temp h3').html(filteredObject[index].price)
+  $('#temp p').html(filteredObject[index].cat)
+  $('#temp span').html(filteredObject[index].score)
   return $("#temp").html()
 }
