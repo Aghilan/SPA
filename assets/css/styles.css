@@ -9,7 +9,10 @@ div.grid-card {
   block-size: inherit;
 }
 
-div.grid-row, div.grid-set {
+div.grid-row {
+  display: inline-block;
+}
+div.grid-set {
     height: 100%;
 }
 
