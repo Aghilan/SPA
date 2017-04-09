@@ -1,33 +1,34 @@
 var lastRenderedGrid = 0
 var filteredObject, allObjects
 var categories = []
+var allCategories = []
+var $checkbox;
+var sort = "none"
+
 $(document).ready(function(){
     $.getJSON( "https://test-prod-api.herokuapp.com/products", function( data ) {
       allObjects = data.products;
-
       allObjects.map(function(product) {
-          if ( categories.indexOf(product.cat) == -1 ) {
-            categories.push(product.cat)
+          var category = product.cat
+          if ( categories.indexOf(category) == -1 ) {
+            categories.push(category)
+             $('<input />', { type: 'checkbox', class: 'category', value: category }).appendTo($('.filter'));
+             $('<label />', { text: category }).add("<br />").appendTo($('.filter'));
           }
       })
+      $('input.category').click(function () {
+          allCategories= []
+          $.each($('.category:checkbox:checked'), function( key, checkedValue ) {
+            allCategories.push(checkedValue.value)
+          })
+          render()
+      });
 
-      filteredObject = allObjects;
-      if(true) {
-
-        //Sample Filtering based on Category
-        filteredObject = $(allObjects).filter(function( idx ) {
-                            return allObjects[idx].cat === "jeans";
-                          });
-
-        //Sample Sorting based on Price
-        filteredObject = filteredObject.sort(function(a, b) {
-            return parseFloat(a.price) - parseFloat(b.price);
-        });
-      }
-
-      renderCardSet(lastRenderedGrid)
-
-
+      $('#sort').change(function() {
+          sort = $(this).val()
+          render()
+      });
+      render()
       var win = $(window);
       win.scroll(function() {
   		  var scrollHeight = $(document).height() - win.height()
@@ -38,6 +39,26 @@ $(document).ready(function(){
   	   });
     });
 });
+
+function render(){
+  if(allCategories.length > 0) {
+    filteredObject = $(allObjects).filter(function( idx ) {
+                    return $.inArray(allObjects[idx].cat, allCategories) >= 0
+                  });
+  }
+  else {
+    filteredObject = allObjects
+  }
+  if(sort !== 'none') {
+    filteredObject = filteredObject.sort(function(a, b) {
+                        return parseFloat(a[sort]) - parseFloat(b[sort]);
+                      });
+  }
+  $(".grid-collection").hide().fadeIn('slow').empty()
+  lastRenderedGrid = 0
+  renderCardSet(lastRenderedGrid)
+}
+
 
 function renderCardSet(setIndex) {
   $('.grid-collection').append($("<div>", {class: "grid-set"}).html(renderContentRow(setIndex).add(renderContentRow(setIndex+3)).add(renderContentRow(setIndex+6))))

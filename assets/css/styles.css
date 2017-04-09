@@ -4,27 +4,43 @@ html, body {
 
 div.grid-card {
   width: 33.33%;
-  min-height: 250px;
-  float: left;
-  block-size: inherit;
 }
 
 div.grid-row {
+  margin-bottom: 5%;
   width: 100%;
-  display: inline-block;
+  display: inline-flex;
 }
 div.grid-set {
     height: 100%;
 }
 
+div.grid-desc {
+}
+
+
+div.grid-collection {
+  width: 85%;
+  float: right;
+}
+
+div.filter {
+  position: fixed;
+  float: left;
+  width: 15%;
+}
+
 div.grid-content {
   margin: 5%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 div.grid-image {
   text-align: center;
-  height: 20%;
+  /*height: 20%;*/
 }
 
 img {
