@@ -1,9 +1,13 @@
 # SPA
 Single Page Application in Javascript
 
+This is a front end application that consumes data from an API to display product information.
+The user will be able to categorize the product and also sort the products based on Price and Quality.
 
-A locally running webserver is needed, since the application uses AJAX.
-It will not work if you simply double-click index.html.
+Please refer the SPA-UX for the intended design
+
+A locally running webserver is not really needed.
+It will also work if you simply double-click index.html.
 
 You could run a node server or python server.
 
