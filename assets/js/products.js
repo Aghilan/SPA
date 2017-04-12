@@ -4,6 +4,7 @@ var categories = []
 var allCategories = []
 var $checkbox;
 var sort = "none"
+var sortDesc;
 
 $(document).ready(function(){
     $.getJSON( "https://test-prod-api.herokuapp.com/products", function( data ) {
@@ -21,19 +22,24 @@ $(document).ready(function(){
           $.each($('.category:checkbox:checked'), function( key, checkedValue ) {
             allCategories.push(checkedValue.value)
           })
+          $('.spinner').show()
           render()
       });
 
       $('#sort').change(function() {
           sort = $(this).val()
+          sortDesc = $(this).children(":selected").attr("id");
+          $('.spinner').show()
           render()
       });
+
       render()
       var win = $(window);
       win.scroll(function() {
   		  var scrollHeight = $(document).height() - win.height()
         if ( scrollHeight > win.scrollTop() - 10 && scrollHeight < win.scrollTop() + 10) {
     			lastRenderedGrid+= 9
+
           renderCardSet(lastRenderedGrid)
         }
   	   });
@@ -41,22 +47,26 @@ $(document).ready(function(){
 });
 
 function render(){
+  filteredObject = JSON.parse(JSON.stringify(allObjects))
   if(allCategories.length > 0) {
-    filteredObject = $(allObjects).filter(function( idx ) {
+    filteredObject = $(filteredObject).filter(function( idx ) {
                     return $.inArray(allObjects[idx].cat, allCategories) >= 0
                   });
   }
-  else {
-    filteredObject = allObjects
-  }
-  if(sort !== 'none') {
+  if(sort != 'none') {
     filteredObject = filteredObject.sort(function(a, b) {
+                        if(sortDesc) {
+                          return parseFloat(b[sort]) - parseFloat(a[sort]);
+                        }
                         return parseFloat(a[sort]) - parseFloat(b[sort]);
                       });
   }
+
   $(".grid-collection").hide().fadeIn('slow').empty()
   lastRenderedGrid = 0
+  $('.spinner').hide()
   renderCardSet(lastRenderedGrid)
+
 }
 
 
@@ -71,11 +81,38 @@ function renderContentRow( rowIndex ) {
   return $("<div>", {class: "grid-row"}).html($left.add($center).add($right))
 }
 
+function capitalizeString( value ) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function formatRupees( money )
+{
+ var regexPattern = /(\d+)(\d{3})/;
+ var totalPrefix = 0;
+ var formatters = parseInt((money.length/2)-1);
+  while (regexPattern.test(money))
+  {
+    if(totalPrefix > 0)
+      money = money.replace(regexPattern, '$1' + ',' + '$2');
+    else {
+      money = money.replace(regexPattern, '$1' + ',' + '$2');
+      rgx = /(\d+)(\d{2})/;
+    }
+    totalPrefix++;
+    formatters--;
+    if(formatters == 0)
+    {
+      break;
+    }
+  }
+ return 'Rs.'+money;
+}
+
 function renderContentGrid(index) {
   $('#temp img').attr('src', filteredObject[index].img)
-  $('#temp h2').html(filteredObject[index].name)
-  $('#temp h3').html(filteredObject[index].price)
-  $('#temp p').html(filteredObject[index].cat)
-  $('#temp span').html(filteredObject[index].score)
+  $('#temp h2').html("Name : " + capitalizeString(filteredObject[index].name))
+  $('#temp h3').html("Price : " + formatRupees(filteredObject[index].price.toString()))
+  $('#temp p').html("Category : " + capitalizeString(filteredObject[index].cat))
+  $('#temp span').html("Score : " + filteredObject[index].score)
   return $("#temp").html()
 }
